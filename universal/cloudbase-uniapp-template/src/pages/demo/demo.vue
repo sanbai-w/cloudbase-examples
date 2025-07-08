@@ -446,7 +446,7 @@ const downloadFile = async () => {
     return
   }
   try {
-    const fileID = 'cloud://cloud1-6g3islov04964ac4.636c-cloud1-6g3islov04964ac4-1363737591/demo/1750843025634.jpg' // 替换为你的文件ID
+    const fileID = 'your-cloud-file-id' // 替换为你的文件ID
     loading.value = true
 
     const result:any = await app.downloadFile({

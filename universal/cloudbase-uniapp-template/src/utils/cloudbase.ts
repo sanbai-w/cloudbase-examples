@@ -1,16 +1,11 @@
 import cloudbase from '@cloudbase/js-sdk'
 import adapter from '@cloudbase/adapter-uni-app'
-// import adapter from './adapter';
-import { parseQueryString, globalEventBus } from './index';
-
-// 全局事件总线实例
-// const EVENT_BUS = globalEventBus;
 
 // 使用 UniApp 适配器
 cloudbase.useAdapters(adapter,{uni: uni});
 
 // 云开发环境ID，使用时请替换为您的环境ID
-const ENV_ID: string = 'cloud1-6g3islov04964ac4';
+const ENV_ID: string = 'your-env-id';
 
 // 检查环境ID是否已配置
 export const isValidEnvId = ENV_ID && ENV_ID !== 'your-env-id';
@@ -26,10 +21,10 @@ export const init = (config: any = {}) => {
   const appConfig = {
     env: config.env || ENV_ID,
     timeout: config.timeout || 15000,
-    appSign: 'uni-app',//凭证描述
+    appSign: 'your-app-sign',//凭证描述
     appSecret: {
         appAccessKeyId: 1,//凭证版本
-        appAccessKey: '7cff5c18b98edc9eab4cc695123cb167'//凭证
+        appAccessKey: 'your-app-secret'//凭证
     }
   };
 
@@ -41,49 +36,6 @@ export const init = (config: any = {}) => {
  */
 export const app = init();
 
-const AUTH_BASE_CONFIG = {
-  captchaOptions: {
-    openURIWithCallback: (_url: string) => {
-      let queryObj: Record<string, string> = {};
-      let url = _url;
-      // console.log('openURIWithCallback', _url);
-      const matched = _url.match(/^(data:.*?)(\?[^#\s]*)?$/);
-      if(matched) {
-        url = matched[1];
-        // console.log('openURIWithCallback url', url);
-        const search = matched[2];
-        if (search){
-          queryObj = parseQueryString(search);
-        }
-      }
-      console.log('openURIWithCallback queryObj', queryObj);
-      const { token, ...restQueryObj} = queryObj;
-      if(/^data:/.test(url) && !token) {
-        // 如果是 data: 开头的 URL 且没有 token，则直接返回
-        return Promise.reject({
-          error: 'invalid_argument',
-          error_description: `invalie captcha data: ${_url}`,
-        });
-      }
-      if(!token){
-        return Promise.reject({
-          error: 'unimplemented',
-          error_description: 'need to impl captcha data',
-        });
-      }
-      return new Promise((resolve) => {
-        console.log('wait for captcha...')
-        uni.$emit('CAPTCHA_DATA_CHANGE',{...restQueryObj, token, url});
-
-        // 监听事件总线，等待验证码数据变化
-        uni.$once('RESOLVE_CAPTCHA_DATA', (res: {captcha_token: string;
-        expires_in: number}) => {
-          resolve(res);
-        });
-      });
-    },
-  },
-} 
 
 /**
  * 云开发认证实例
