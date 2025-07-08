@@ -302,7 +302,7 @@ const addRecord = async () => {
   loading.value = true
   try {
     const db = app.database()
-    await db.collection('test1').add({
+    await db.collection('test').add({
       content: newRecord.value,
       createTime: new Date().toLocaleString()
     })
@@ -327,7 +327,7 @@ const queryRecords = async () => {
   loading.value = true
   try {
     const db = app.database()
-    const result = await db.collection('test1').orderBy('createTime', 'desc').limit(10).get()
+    const result = await db.collection('test').orderBy('createTime', 'desc').limit(10).get()
     records.value = result.data
     uni.showToast({ title: '查询成功', icon: 'success' })
   } catch (error: any) {
@@ -358,7 +358,7 @@ const startListening = async() => {
   }
   realtimeRecord.value = '' // 清空之前的记录
   // 开始监听数据变化
-  const collection = db.collection('test1')
+  const collection = db.collection('test')
   watcher = collection.watch({
     onChange: (snapshot:any) => {
       console.log('数据变化:', snapshot)
