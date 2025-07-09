@@ -29,6 +29,12 @@
       <button class="btn btn-primary" @click="goToDemo">
         体验云开发功能
       </button>
+      <button class="btn btn-success" @click="goToLogin">
+        选择登录方式
+      </button>
+      <button class="btn btn-info" @click="goToProfile">
+        查看用户信息
+      </button>
       <button class="btn btn-secondary" @click="openDocs">
         查看文档
       </button>
@@ -47,6 +53,20 @@ import { ref } from 'vue'
 const goToDemo = () => {
   uni.navigateTo({
     url: '/pages/demo/demo'
+  })
+}
+
+// 跳转到登录页面
+const goToLogin = () => {
+  uni.navigateTo({
+    url: '/pages/login/index'
+  });
+}
+
+// 跳转到用户信息页面
+const goToProfile = () => {
+  uni.navigateTo({
+    url: '/pages/profile/profile'
   })
 }
 
@@ -135,13 +155,13 @@ const openDocs = () => {
 
 .actions {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 20rpx;
   margin-bottom: 40rpx;
 }
 
 .btn {
-  flex: 1;
+  width: 100%;
   padding: 20rpx 30rpx;
   border-radius: 40rpx;
   border: none;
@@ -154,6 +174,18 @@ const openDocs = () => {
   background: linear-gradient(45deg, #ff6b6b, #ee5a24);
   color: white;
   box-shadow: 0 8rpx 20rpx rgba(255, 107, 107, 0.3);
+}
+
+.btn-success {
+  background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+  color: white;
+  box-shadow: 0 8rpx 20rpx rgba(86, 171, 47, 0.3);
+}
+
+.btn-info {
+  background: linear-gradient(45deg, #3498db, #74b9ff);
+  color: white;
+  box-shadow: 0 8rpx 20rpx rgba(52, 152, 219, 0.3);
 }
 
 .btn-secondary {

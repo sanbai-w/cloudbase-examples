@@ -21,7 +21,7 @@
       </view>
       <view class="button-group">
         <button class="btn btn-primary" @click="handleLogin" :disabled="loading">
-          {{ loginStatus === '已登录' ? '重新登录' : '匿名登录' }}
+          {{ loginStatus === '已登录' ? '重新登录' : '跳转登录' }}
         </button>
         <button class="btn btn-secondary" @click="handleLogout" :disabled="loading">
           退出登录
@@ -38,6 +38,18 @@
       <view v-if="functionResult" class="result-card">
         <text class="result-title">函数返回结果:</text>
         <text class="result-text">{{ functionResult }}</text>
+      </view>
+    </view>
+
+    <!-- 调用云托管服务 -->
+    <view class="section">
+      <view class="section-title">云托管服务</view>
+      <button class="btn btn-primary" @click="callCloudRunFunction" :disabled="loading">
+        调用云托管服务
+      </button>
+      <view v-if="cloudrunResult" class="result-card">
+        <text class="result-title">服务返回结果:</text>
+        <text class="result-text">{{ cloudrunResult }}</text>
       </view>
     </view>
 
@@ -66,6 +78,21 @@
       </view>
     </view>
 
+    <!-- 数据库监听(websoket测试) -->
+    <view class="section">
+      <view class="section-title">数据库监听</view>
+      <button class="btn btn-primary" @click="startListening" :disabled="loading">
+        开始监听
+      </button>
+      <button class="btn btn-secondary" @click="stopListening" :disabled="loading || !watcher">
+        停止监听
+      </button>
+      <view v-if="realtimeRecord" class="result-card">
+        <text class="result-title">实时数据记录:</text>
+        <text class="result-text">{{ realtimeRecord }}</text>
+      </view>
+    </view>
+
     <!-- 文件上传 -->
     <view class="section">
       <view class="section-title">文件上传</view>
@@ -79,6 +106,21 @@
       <view v-if="uploadResult" class="result-card">
         <text class="result-title">上传结果:</text>
         <text class="result-text">{{ uploadResult }}</text>
+      </view>
+    </view>
+
+    <!-- 文件下载 -->
+    <view class="section">
+      <view class="section-title">文件下载</view>
+      <button class="btn btn-primary" @click="downloadFile" :disabled="loading">
+        下载文件
+      </button>
+      <view v-if="downloadResult" class="result-card">
+        <text class="result-title">下载结果:</text>
+        <text class="result-text">{{ downloadResult }}</text>
+      </view>
+      <view v-if="imageSrc" class="result-card">
+        <image :src="imageSrc" mode="widthFix" class="downloaded-image"></image>
       </view>
     </view>
 
@@ -111,6 +153,15 @@ const newRecord = ref('')
 const records = ref<any[]>([])
 const uploadProgress = ref(0)
 const uploadResult = ref('')
+// 新增
+const downloadResult = ref('')
+const imageSrc = ref('')
+
+let watcher:any = null // 监听器
+const realtimeRecord = ref('')
+let isListening = false; // 防止多次点击
+
+const cloudrunResult = ref('')
 
 // 检查环境配置
 const checkEnv = () => {
@@ -134,7 +185,7 @@ const initializeCloudBase = async () => {
     if (success) {
       loginStatus.value = '已登录'
     } else {
-      loginStatus.value = '登录失败'
+      loginStatus.value = '未登录'
     }
   } catch (error) {
     console.error('初始化失败:', error)
@@ -150,7 +201,12 @@ const handleLogin = async () => {
     uni.showToast({ title: '请先配置环境ID', icon: 'none' })
     return
   }
-  
+  if(loginStatus.value === '未登录' || loginStatus.value === '登录失败' || loginStatus.value === '已退出') {
+    uni.navigateTo({
+      url: '/pages/login/index' // 跳转到登录页面
+    })
+    return
+  }
   loading.value = true
   try {
     await ensureLogin()
@@ -195,6 +251,36 @@ const callCloudFunction = async () => {
   } catch (error: any) {
     console.error('云函数调用失败:', error)
     functionResult.value = '调用失败: ' + error.message
+    uni.showToast({ title: '调用失败', icon: 'error' })
+  } finally {
+    loading.value = false
+  }
+}
+
+// 调用云托管服务
+const callCloudRunFunction = async () => {
+  if (loginStatus.value !== '已登录') {
+    uni.showToast({ title: '请先登录', icon: 'none' })
+    return
+  }
+  loading.value = true
+  try {
+   const result = await app.callFunction({ 
+      name: 'express', 
+      method: 'GET', // 使用 GET 方法调用云托管服务
+      type: 'cloudrun', // 指定调用云托管服务
+      path: '/api/users', // 替换为你的云托管服务路径
+      header: { 'Content-Type': 'application/json; charset=UTF-8' },
+      data: {
+							key1: 'test value 1',
+							key2: 'test value 2'
+						},
+      })
+    cloudrunResult.value = JSON.stringify(result.result, null, 2)
+    uni.showToast({ title: '调用成功', icon: 'success' })
+  } catch (error: any) {
+    console.error('云托管服务调用失败:', error)
+    cloudrunResult.value = '调用失败: ' + error.errMsg
     uni.showToast({ title: '调用失败', icon: 'error' })
   } finally {
     loading.value = false
@@ -252,6 +338,61 @@ const queryRecords = async () => {
   }
 }
 
+// 实时监听数据变化
+const startListening = async() => {
+  if (loginStatus.value !== '已登录') {
+    uni.showToast({ title: '请先登录', icon: 'none' })
+    return
+  }
+  if (isListening) {
+    uni.showToast({ title: '已在监听中', icon: 'none' })
+    return
+  }
+  isListening = true
+
+  loading.value = true
+  const db = app.database()
+  
+  if (watcher) {
+    watcher.close() // 如果之前有监听器，先关闭它
+  }
+  realtimeRecord.value = '' // 清空之前的记录
+  // 开始监听数据变化
+  const collection = db.collection('test')
+  watcher = collection.watch({
+    onChange: (snapshot:any) => {
+      console.log('数据变化:', snapshot)
+      if (snapshot.docChanges && snapshot.docChanges.length > 0) {
+        snapshot.docChanges.forEach((change: any) => {
+          switch (change.dataType) {
+            case 'add':  // 新增数据
+              realtimeRecord.value = `新增数据: ${change.doc.content} (${change.doc.createTime})`
+              break
+            case 'remove':  // 删除数据
+              realtimeRecord.value = `删除数据: ${change.doc.content} (${change.doc.createTime})`
+              break
+          }
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.error('监听失败:', error)
+      uni.showToast({ title: '监听失败', icon: 'error' })
+    }
+  })
+  loading.value = false
+}
+// 停止监听
+const stopListening = () => {
+  if (watcher) {
+    watcher.close()
+    watcher = null
+    isListening = false
+    realtimeRecord.value = '' // 清空实时记录
+    uni.showToast({ title: '监听已停止', icon: 'success' })
+  }
+}		
+		
 // 选择并上传文件
 const chooseAndUploadFile = async () => {
   if (loginStatus.value !== '已登录') {
@@ -278,6 +419,7 @@ const chooseAndUploadFile = async () => {
       const result = await app.uploadFile({
         cloudPath,
         filePath,
+        method: 'post',
         onUploadProgress: (progressEvent: any) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           uploadProgress.value = progress
@@ -296,6 +438,34 @@ const chooseAndUploadFile = async () => {
     uploadProgress.value = 0
   }
 }
+
+// 下载文件
+const downloadFile = async () => {
+  if (loginStatus.value !== '已登录') {
+    uni.showToast({ title: '请先登录', icon: 'none' })
+    return
+  }
+  try {
+    const fileID = 'your-cloud-file-id' // 替换为你的文件ID
+    loading.value = true
+
+    const result:any = await app.downloadFile({
+      fileID,
+    })
+
+    downloadResult.value = `文件下载成功\n临时路径: ${result.tempFilePath}`
+    uni.showToast({ title: '下载成功', icon: 'success' })
+    imageSrc.value = result.tempFilePath // 显示下载的图片
+  } catch (error: any) {
+    console.error('文件下载失败:', error)
+    downloadResult.value = '下载失败: ' + error.message
+    uni.showToast({ title: '下载失败', icon: 'error' })
+  } finally {
+    loading.value = false
+  }
+}
+
+
 </script>
 
 <style scoped>
