@@ -172,8 +172,6 @@ const appConfig = {
     }
 ```
 
-
-
 </details>
 
 <details>
@@ -287,7 +285,7 @@ tcb functions:deploy hello
 ### 抖音小程序发布
 
 1. 构建抖音小程序版本：`npm run build:mp-toutiao`
-2. 使用抖音开发者工具打开 `dist/build/mp-toutiao`
+2. 使用抖音开发者工具打开 `dist/build/mp-toutiao` 目录
 3. 上传代码包并发布
 
 ### 支付宝小程序发布
