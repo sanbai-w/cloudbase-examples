@@ -1,6 +1,6 @@
 # CloudBase UniApp 模板
 
-基于 UniApp 和腾讯云开发（CloudBase）的跨平台应用模板，目前已适配 **H5** 和 **微信小程序**，其他端的适配正在开发中。为开发者提供了快速构建全栈跨平台应用的能力。
+基于 UniApp 和腾讯云开发（CloudBase）的跨平台应用模板，目前已适配 **H5** 、 **微信小程序** 、 **支付宝小程序** 以及 **抖音小程序**，其他端的适配正在开发中。为开发者提供了快速构建全栈跨平台应用的能力。
 
 [![Powered by CloudBase](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/powered-by-cloudbase-badge.svg)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
@@ -10,7 +10,7 @@
 
 - 🚀 基于 UniApp 构建，一套代码多端运行
 - ⚡ 使用 Vue 3 Composition API 构建现代化 UI
-- 🌐 目前支持 **H5** 和 **微信小程序**，其他平台适配开发中
+- 🌐 目前支持 **H5** 、 **微信小程序** 、 **支付宝小程序** 以及 **抖音小程序**，其他平台适配开发中
 - 🎁 深度集成腾讯云开发 CloudBase，提供一站式后端云服务
 - 🔧 自定义 UniApp 适配器，完美适配云开发能力
 - 📱 完整的 TypeScript 支持，提供更好的开发体验
@@ -21,7 +21,7 @@
 
 - **框架**：UniApp (基于 Vue 3)
 - **构建工具**：Vite
-- **多端支持**：H5、微信小程序（其他平台适配开发中）
+- **多端支持**：H5、微信小程序、支付宝小程序、抖音小程序（其他平台适配开发中）
 - **状态管理**：Vue 3 Reactivity API
 - **类型支持**：TypeScript
 
@@ -29,9 +29,10 @@
 
 本项目使用了以下腾讯云开发（CloudBase）资源：
 
-- **身份认证**：用于用户登录和身份验证（匿名登录）
+- **身份认证**：用于用户登录和身份验证（匿名登录、手机验证码登录、邮箱验证码登录、手机号/用户名/邮箱密码登录、微信小程序 openId 静默登录）
 - **云数据库**：用于存储应用数据
 - **云函数**：用于实现业务逻辑
+- **云托管**：用于实现业务逻辑
 - **云存储**：用于存储文件
 - **静态网站托管**：用于部署 H5 版本
 
@@ -39,32 +40,40 @@
 
 ```
 ├── src/
-│   ├── pages/                    # 页面文件
-│   │   ├── index/               # 首页
+│   ├── components/
+│   │   ├── show-captcha.vue       # 登录验证弹窗组件
+│   ├── pages/                     # 页面文件
+│   │   ├── index/                 # 首页
 │   │   │   ├── index.vue
 │   │   │   └── index.json
-│   │   └── demo/                # 云开发演示页面
-│   │       ├── demo.vue
-│   │       └── demo.json
-│   ├── utils/                   # 工具函数和云开发初始化
-│   │   ├── adapter.js           # UniApp 适配器
-│   │   ├── cloudbase.ts         # 云开发配置
-│   │   └── index.ts             # 通用工具函数
-│   ├── static/                  # 静态资源
-│   ├── App.vue                  # 应用入口组件
-│   ├── main.ts                  # 应用入口文件
-│   ├── pages.json               # 页面路由配置
-│   └── manifest.json            # 应用配置文件
-├── cloudfunctions/              # 云函数目录
-│   └── hello/                   # 示例云函数
+│   │   ├── demo/                  # 云开发演示页面
+│   │   │   ├── demo.vue
+│   │   │   └── demo.json
+│   │   ├── login/
+│   │   │   ├── index.vue          # 登录主页面
+│   │   │   ├── phone-login.vue    # 手机验证码登录页面
+│   │   │   ├── email-login.vue    # 邮箱验证码登录页面
+│   │   │   └── password-login.vue # 密码登录页面
+│   │   └── profile/               # 用户信息页面
+│   │       └── profile.vue        # 用户信息查看页面              
+│   ├── utils/                     # 工具函数和云开发初始化
+│   │   ├── cloudbase.ts           # 云开发配置
+│   │   └── index.ts               # 通用工具函数
+│   ├── static/                    # 静态资源
+│   ├── App.vue                    # 应用入口组件
+│   ├── main.ts                    # 应用入口文件
+│   ├── pages.json                 # 页面路由配置
+│   └── manifest.json              # 应用配置文件
+├── cloudfunctions/                # 云函数目录
+│   └── hello/                     # 示例云函数
 │       ├── index.js
 │       └── package.json
-├── index.html                   # H5 模板
-├── vite.config.ts               # Vite 配置
-├── tsconfig.json                # TypeScript 配置
-├── package.json                 # 项目依赖
-├── cloudbaserc.json            # CloudBase CLI 配置
-└── README.md                   # 项目说明
+├── index.html                     # H5 模板
+├── vite.config.ts                 # Vite 配置
+├── tsconfig.json                  # TypeScript 配置
+├── package.json                   # 项目依赖
+├── cloudbaserc.json               # CloudBase CLI 配置
+└── README.md                      # 项目说明
 ```
 
 ## 开始使用
@@ -102,17 +111,28 @@ const ENV_ID = 'your-env-id'; // 替换为您的云开发环境ID
 <details>
 <summary>云开发环境配置</summary>
 
-#### 1. 开启匿名登录
+#### 1. 开启登录认证方式
 
-在云开发控制台的【环境】->【登录授权】中开启匿名登录。
+在云开发控制台的【扩展能力】->【身份认证】->【登录方式】中开启
+- 匿名登录
+- 用户名密码登录
+- 短信验证码登录
+- 邮箱登录
+- 微信小程序 openId 登录（需要先在【环境配置】->【小程序认证】中完成小程序认证）
 
 #### 2. 配置安全域名（H5 端）
 
-在云开发控制台的【环境】->【安全配置】->【WEB 安全域名】中添加：
+在云开发控制台的【环境配置】->【安全来源】->【安全域名】中添加：
 - 开发域名：`http://localhost:5173`（本地开发）
 - 生产域名：您的实际部署域名
 
-#### 3. 配置小程序域名（微信小程序）
+#### 3. 配置安全域名（抖音小程序、支付宝小程序）
+在云开发控制台的【环境配置】->【安全来源】->【安全域名】中添加域名：
+
+- 抖音小程序开发域名：`tmaservice.developer.toutiao.com`
+- 支付宝开发域名：`devappid.hybrid.alipay-eco.com`
+
+#### 4. 配置微信小程序域名
 
 在微信小程序管理后台的【开发】->【开发管理】->【开发设置】->【服务器域名】中配置：
 
@@ -133,7 +153,26 @@ https://your-env-id.tcb.qcloud.la
 https://cos.ap-shanghai.myqcloud.com
 ```
 
+
 > 注意：请将 `your-env-id` 替换为您的实际环境 ID，地域根据您的云开发环境所在地域调整。
+
+#### 5. 配置安全应用来源
+在云开发控制台的【环境配置】->【安全来源】->【移动应用安全来源】中添加应用：
+- 应用标识：`your-appSign`
+- 应用凭证：`your-appAccessKey`
+
+```typescript
+const appConfig = {
+    env: config.env || ENV_ID,
+    timeout: config.timeout || 15000,
+    appSign: 'your-appSign', // 应用标识
+    appSecret: {
+        appAccessKeyId: 1, // 凭证版本
+        appAccessKey: 'your-appAccessKey' // 凭证
+    }
+```
+
+
 
 </details>
 
@@ -147,7 +186,13 @@ npm run dev:h5
 # 微信小程序开发
 npm run dev:mp-weixin
 
-# 注意：目前仅支持 H5 和微信小程序，其他平台适配开发中
+# 抖音小程序开发
+npm run dev:mp-toutiao
+
+# 支付宝小程序开发
+npm run dev:mp-alipay
+
+# 注意：目前仅支持 H5、微信小程序、抖音小程序和支付宝小程序开发，其他平台适配开发中
 ```
 
 </details>
@@ -162,7 +207,13 @@ npm run build:h5
 # 构建微信小程序
 npm run build:mp-weixin
 
-# 注意：目前仅支持 H5 和微信小程序构建
+# 构建抖音小程序
+npm run build:mp-toutiao
+
+# 构建支付宝小程序
+npm run build:mp-alipay
+
+# 注意：目前仅支持 H5 、微信小程序、抖音小程序和支付宝小程序构建，其他平台适配开发中
 ```
 
 </details>
@@ -183,8 +234,30 @@ await db.collection('users').add({ name: 'test' }); // 添加数据
 // 调用云函数
 const funcResult = await app.callFunction({ name: 'hello' });
 
+// 调用云托管
+app.callContainer({
+    name: 'helloworld',
+    method: 'POST',
+    path: '/abc',
+    header:{
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    data: {
+      key1: 'test value 1',
+      key2: 'test value 2'
+    },
+  }).then((res) => {
+    console.log(res)
+  });
+
 // 文件上传
 const uploadResult = await app.uploadFile({ cloudPath: 'test.jpg', filePath: file });
+
+// 文件下载
+cloudbase.downloadFile({
+    fileID: "cloud://aa-99j9f/my-photo.png"
+  }).then((res) => {});
+
 ```
 
 ## 部署指南
@@ -211,6 +284,19 @@ tcb functions:deploy hello
 2. 使用微信开发者工具打开 `dist/build/mp-weixin` 目录
 3. 上传代码包并发布
 
+### 抖音小程序发布
+
+1. 构建抖音小程序版本：`npm run build:mp-toutiao`
+2. 使用抖音开发者工具打开 `dist/build/mp-toutiao`
+3. 上传代码包并发布
+
+### 支付宝小程序发布
+
+1. 构建支付宝小程序版本：`npm run build:mp-alipay`
+2. 使用支付宝开发者工具打开 `dist/build/mp-alipay` 目录
+3. 上传代码包并发布
+
+
 ## 平台适配状态
 
 ### ✅ 已适配平台
@@ -225,10 +311,18 @@ tcb functions:deploy hello
 - ✅ 支持本地开发和发布
 - ✅ 已配置相关域名白名单
 
-### 🚧 开发中平台
+#### 抖音小程序
+- ✅ 完全支持所有云开发功能
+- ✅ 支持本地开发和发布
+- ✅ 已配置相关域名白名单
 
 #### 支付宝小程序
-- 🚧 适配开发中
+- ✅ 完全支持所有云开发功能
+- ✅ 支持本地开发和发布
+- ✅ 已配置相关域名白名单
+
+
+### 🚧 开发中平台
 
 #### App 端
 - 🚧 适配开发中
@@ -257,16 +351,17 @@ const config = {
 };
 ```
 
-注意：目前 App 端适配开发中，此配置暂时不需要。
 -->
 
 ## 功能演示
 
 项目包含完整的云开发功能演示：
 
-- **认证功能**: 匿名登录/退出
+- **认证功能**: 匿名登录/退出、手机验证码登录、邮箱验证码登录、密码登录、微信小程序 openId 静默登录
 - **云函数调用**: 调用示例云函数
+- **云托管**: 调用云托管服务
 - **数据库操作**: 增加和查询数据
+- **数据库监听**: 实时监听数据变化
 - **文件存储**: 上传和下载文件
 
 访问演示页面体验完整功能。
