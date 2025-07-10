@@ -136,6 +136,12 @@ curl 'http://127.0.0.1:3000/v1/aibot/bots/{your-botId}/send-message' \
 
 ### Agent 功能说明
 
+#### 对话记录查询
+
+Agent 对话记录统一保存在数据模型 `ai_bot_chat_history_5hobd2b` 中，可以通过` 腾讯云CloudBase控制台 -> 数据库 -> 文档型 -> 数据模型` 中查询历史对话记录
+
+![对话记录存储](https://qcloudimg.tencent-cloud.cn/raw/d159b8053226969a65a2e7a4c99cb150.png)
+
 #### 联网查询
 
 配置字段
@@ -397,19 +403,16 @@ curl 'http://127.0.0.1:3000/v1/aibot/bots/{your-botId}/send-message' \
 
 ```yaml
 voiceSettings:
-## 是否开启
+  ## 是否开启
   enable: false
-## 语音输入引擎模型类型
-  inputType: "16k_zh"  
-## 语音输出音色
+  ## 语音输入引擎模型类型
+  inputType: "16k_zh"
+  ## 语音输出音色
   outputType: 501007
 ```
 
-  
 `inputType` 字段枚举可参考
 [语音输入引擎模型类型](https://cloud.tencent.com/document/product/1093/35646#2.-.E8.BE.93.E5.85.A5.E5.8F.82.E6.95.B0) 中的 `EngSerViceType` 字段
 
 `outputType` 字段枚举可参考
-[语音输出音色类型](https://cloud.tencent.com/document/product/1073/92668) 
-
-
+[语音输出音色类型](https://cloud.tencent.com/document/product/1073/92668)

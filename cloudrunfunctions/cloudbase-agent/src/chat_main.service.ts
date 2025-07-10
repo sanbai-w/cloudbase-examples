@@ -111,6 +111,7 @@ export class MainChatService {
 
   async chat (options: ChatOptions) {
     // 根据系统配置及请求参数构造对话上下文
+
     const { messages } = await this.chatContextService.prepareMessages({
       msg: options.msg,
       files: options.files,
@@ -142,5 +143,6 @@ export class MainChatService {
       recordId: replyRecordId,
       ...result
     })
+
   }
 }

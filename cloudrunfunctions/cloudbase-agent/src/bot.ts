@@ -24,7 +24,7 @@ import { ChatHistoryService } from './chat_history.service'
 import { MainChatService } from './chat_main.service'
 import { RecommendQuestionsService } from './chat_recommend_questions.service'
 import { ChatToolService } from './chat_tool.service'
-import { replaceEnvId, TcbContext } from './tcb'
+import { replaceEnvId, replaceReadMe, TcbContext } from './tcb'
 
 export class MyBot extends BotCore implements IBot {
   tcbAgentService: MainChatService
@@ -37,6 +37,7 @@ export class MyBot extends BotCore implements IBot {
     const botContext = new BotContext(context)
     botContext.bot = this
     botConfig.baseURL = replaceEnvId(context, botConfig.baseURL)
+    botConfig.agentSetting = replaceReadMe(botConfig.agentSetting)
     botContext.info = new BotInfo(this.botId, botConfig)
     botContext.config = Object.assign({}, botConfig)
 
@@ -47,6 +48,7 @@ export class MyBot extends BotCore implements IBot {
   }
 
   async sendMessage (input: SendMessageInput): Promise<void> {
+
     await this.tcbAgentService.chat({
       botId: this.botId,
       msg: input.msg,
@@ -56,6 +58,7 @@ export class MyBot extends BotCore implements IBot {
     })
 
     this.sseSender.end()
+
   }
 
   async getRecommendQuestions ({
@@ -87,7 +90,7 @@ export class MyBot extends BotCore implements IBot {
   async getBotInfo (): Promise<GetBotInfoOutput> {
     const filePath = 'bot-config.yaml' // 配置文件路径
     try {
-      const stats = fs.statSync(filePath)
+      const fileStats = fs.statSync(filePath)
       console.log()
       const botInfo: GetBotInfoOutput = {
         botId: this.botId,
@@ -105,7 +108,7 @@ export class MyBot extends BotCore implements IBot {
         searchFileEnable: botConfig.searchFileEnable,
         mcpServerList: botConfig.mcpServerList,
         voiceSettings: botConfig.voiceSettings,
-        updateTime: Math.floor(stats.mtime.getTime() / 1000)
+        updateTime: Math.floor(fileStats.mtime.getTime() / 1000)
       }
       return botInfo
     } catch (error) {
@@ -115,7 +118,6 @@ export class MyBot extends BotCore implements IBot {
 
   async speechToText (input: SpeechToTextInput): Promise<SpeechToTextOutput> {
     const result = await this.chatToolService.speechToText(input)
-    console.log(result)
     return { Result: result.result }
   }
 
