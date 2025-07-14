@@ -38,7 +38,8 @@
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
-                ]
+                ],
+                "abiFilters" : [ "arm64-v8a", "x86" ]
             },
             /* ios打包配置 */
             "ios" : {},
@@ -63,10 +64,10 @@
         "usingComponents" : true
     },
     "mp-toutiao" : {
-        "usingComponents" : true,
+        "usingComponents" : true
     },
-    "uniStatistics": {  
-        "enable": false
+    "uniStatistics" : {
+        "enable" : false
     },
     "vueVersion" : "3"
 }

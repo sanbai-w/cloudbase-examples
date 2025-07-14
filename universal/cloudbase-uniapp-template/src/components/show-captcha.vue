@@ -6,6 +6,7 @@
       type="center" 
       :is-mask-click="false"
       @maskClick="handleCancel"
+      @change="onPopupChange"
     >
       <view class="captcha-container">
         <view class="captcha-header">
@@ -65,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import type { UniPopupInstance } from '@dcloudio/uni-ui'
 import { auth } from '../utils/cloudbase'
 
@@ -77,6 +78,15 @@ const state = ref('')
 const loading = ref(false)
 const show = ref(false) // 控制 v-if 的响应式变量
 const isRefreshing = ref(false)
+
+// 这个 watch 会在 show 变为 true 后启动，直到 popup.value 被赋值
+watch(popup, (newPopupInstance) => {
+  // 一旦 popup.value 不再是 null，说明实例已准备就绪
+  if (newPopupInstance && show.value) {
+    console.log('Popup 实例已成功获取，正在打开...')
+    newPopupInstance.open()
+  }
+})
 
 // 图片加载错误处理
 const onImageError = (e: any) => {
@@ -94,8 +104,6 @@ const handleRefresh = async () => {
   console.log('开始刷新验证码...')
   isRefreshing.value = true
   
-  // 发出一个全局事件，让父页面去处理API调用
-  // uni.$emit('REQUEST_CAPTCHA_REFRESH');
   const { token, data } = await auth.createCaptchaData({
     state: state.value,
   })
@@ -113,20 +121,20 @@ const openCaptcha = (data: any) => {
   state.value = data.state
   captchaCode.value = ''
   show.value = true // 设置为 true，此时组件才会被挂载
+}
 
-  // 使用 nextTick 确保 DOM 更新后再操作 popup
-  nextTick(() => {
-    if (popup.value) {
-      popup.value.open()
-    } else {
-      console.error('Popup 实例未找到')
-    }
-  })
+const onPopupChange = (e: { show: boolean }) => {
+  if (!e.show) {
+    show.value = false
+  }
 }
 
 // 关闭验证码弹窗
 const closeCaptcha = () => {
-  if (popup.value) {
+  if (!popup.value) {
+	// 坑：小程序获取不到popup实例也能弹出弹窗，通过show属性值来控制，导致运行在app端时无法关闭(没有popup实例)
+    show.value = false // 如果 popup 实例不存在，直接设置 show 为 false
+  }else {
     popup.value.close()
   }
   // 设置为 false，组件将被销毁
