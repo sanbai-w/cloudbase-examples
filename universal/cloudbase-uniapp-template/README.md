@@ -1,6 +1,6 @@
 # CloudBase UniApp 模板
 
-基于 UniApp 和腾讯云开发（CloudBase）的跨平台应用模板，目前已适配 **H5** 、 **微信小程序** 、 **支付宝小程序** 以及 **抖音小程序**，其他端的适配正在开发中。为开发者提供了快速构建全栈跨平台应用的能力。
+基于 UniApp 和腾讯云开发（CloudBase）的跨平台应用模板，目前已适配 **H5** 、 **微信小程序** 、 **支付宝小程序** 、 **抖音小程序** 以及 **App (iOS/Android)**，其他端的适配正在开发中。为开发者提供了快速构建全栈跨平台应用的能力。
 
 [![Powered by CloudBase](https://7463-tcb-advanced-a656fc-1257967285.tcb.qcloud.la/mcp/powered-by-cloudbase-badge.svg)](https://github.com/TencentCloudBase/CloudBase-AI-ToolKit)
 
@@ -10,7 +10,7 @@
 
 - 🚀 基于 UniApp 构建，一套代码多端运行
 - ⚡ 使用 Vue 3 Composition API 构建现代化 UI
-- 🌐 目前支持 **H5** 、 **微信小程序** 、 **支付宝小程序** 以及 **抖音小程序**，其他平台适配开发中
+- 🌐 目前支持 **H5** 、 **微信小程序** 、 **支付宝小程序** 、 **抖音小程序** 以及 **App (iOS/Android)** ，其他平台适配开发中
 - 🎁 深度集成腾讯云开发 CloudBase，提供一站式后端云服务
 - 🔧 自定义 UniApp 适配器，完美适配云开发能力
 - 📱 完整的 TypeScript 支持，提供更好的开发体验
@@ -21,7 +21,7 @@
 
 - **框架**：UniApp (基于 Vue 3)
 - **构建工具**：Vite
-- **多端支持**：H5、微信小程序、支付宝小程序、抖音小程序（其他平台适配开发中）
+- **多端支持**：H5、微信小程序、支付宝小程序、抖音小程序、App (iOS/Android)（其他平台适配开发中）
 - **状态管理**：Vue 3 Reactivity API
 - **类型支持**：TypeScript
 
@@ -156,10 +156,11 @@ https://cos.ap-shanghai.myqcloud.com
 
 > 注意：请将 `your-env-id` 替换为您的实际环境 ID，地域根据您的云开发环境所在地域调整。
 
-#### 5. 配置安全应用来源
+#### 5. **（仅 App 端需要）**配置安全应用来源
 在云开发控制台的【环境配置】->【安全来源】->【移动应用安全来源】中添加应用：
 - 应用标识：`your-appSign`
 - 应用凭证：`your-appAccessKey`
+在 `src/utils/cloudbase.ts` 文件中，找到 `appConfig` 对象，填入您获取到的凭证信息。
 
 ```typescript
 const appConfig = {
@@ -190,7 +191,11 @@ npm run dev:mp-toutiao
 # 支付宝小程序开发
 npm run dev:mp-alipay
 
-# 注意：目前仅支持 H5、微信小程序、抖音小程序和支付宝小程序开发，其他平台适配开发中
+# App (iOS/Android) 开发
+# 1. 使用 HBuilderX 打开项目
+# 2. 在顶部菜单栏选择【运行】->【运行到手机或模拟器】-> 选择您的设备
+
+# 注意：目前仅支持 APP、H5、微信小程序、抖音小程序和支付宝小程序开发，其他平台适配开发中
 ```
 
 </details>
@@ -319,11 +324,13 @@ tcb functions:deploy hello
 - ✅ 支持本地开发和发布
 - ✅ 已配置相关域名白名单
 
+#### App 端 (iOS/Android)
+- ✅ 完全支持所有云开发功能
+- ✅ 支持通过 HBuilderX 进行本地开发
+- ✅ 需要配置移动应用安全来源
+
 
 ### 🚧 开发中平台
-
-#### App 端
-- 🚧 适配开发中
 
 #### 其他小程序平台
 - 🚧 适配开发中
