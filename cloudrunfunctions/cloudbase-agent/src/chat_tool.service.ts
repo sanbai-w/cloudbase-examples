@@ -279,7 +279,6 @@ export class ChatToolService {
   async textToSpeech (
     input: TextToSpeechInput
   ): Promise<aitools.TextToSpeechResult> {
-    console.log(input)
 
     const result = await this.botContext.bot.tools.textToSpeech(
       this.botContext.info.botId,
@@ -297,7 +296,6 @@ export class ChatToolService {
   async getTextToSpeechResult (
     input: GetTextToSpeechResultInput
   ): Promise<aitools.GetTextToSpeechResult> {
-    console.log(input)
     const result = await this.botContext.bot.tools.getTextToSpeech(
       this.botContext.info.botId,
       input.taskId

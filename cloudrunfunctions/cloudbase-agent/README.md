@@ -9,16 +9,17 @@
 ```sh
 $ tree -L 3
 .
+├── Dockerfile                ## 编译镜像
 ├── README.md
 ├── bot-config.yaml           ## agent 配置
 ├── cloudbase-functions.json  ## 项目路由配置
 ├── package-lock.json
 ├── package.json
 ├── src
+│   ├── bot.ts
 │   ├── bot_config.ts
 │   ├── bot_context.ts
 │   ├── bot_info.ts
-│   ├── bot.ts
 │   ├── chat_context.service.ts
 │   ├── chat_history.service.ts
 │   ├── chat_main.service.ts
@@ -26,14 +27,15 @@ $ tree -L 3
 │   ├── chat_tool.service.ts
 │   ├── config.ts
 │   ├── constant.ts
-│   ├── index.ts  # 函数入口
+│   ├── conversation_relation.service.ts
+│   ├── index.ts              ## 函数入口
 │   ├── llm.ts
 │   ├── mcp.ts
 │   ├── tcb.ts
 │   └── utils.ts
 └── tsconfig.json
 
-2 directories, 22 files
+2 directories, 25 files
 ```
 
 ## Agent 项目 依赖说明
@@ -416,3 +418,10 @@ voiceSettings:
 
 `outputType` 字段枚举可参考
 [语音输出音色类型](https://cloud.tencent.com/document/product/1073/92668)
+
+
+#### 多会话模式
+
+```yaml
+multiConversationEnable: true  ## 开启多会话模式
+```
