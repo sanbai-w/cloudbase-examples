@@ -4,7 +4,8 @@
     "web/cloudbase-vue-template",
     "web/cloudbase-project",
     "miniprogram/cloudbase-miniprogram-template",
-    "universal/cloudbase-uniapp-template"
+    "universal/cloudbase-uniapp-template",
+    "airules/codebuddy",
   ],
   "exclude": [
     "node_modules/**",
