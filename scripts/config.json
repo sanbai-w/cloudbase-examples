@@ -5,7 +5,7 @@
     "web/cloudbase-project",
     "miniprogram/cloudbase-miniprogram-template",
     "universal/cloudbase-uniapp-template",
-    "airules/codebuddy",
+    "airules/codebuddy"
   ],
   "exclude": [
     "node_modules/**",
