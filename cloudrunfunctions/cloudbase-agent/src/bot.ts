@@ -20,7 +20,9 @@ import {
   TextToSpeechInput,
   TextToSpeechOutput,
   UpdateConversationInput,
-  UpdateConversationOutput
+  UpdateConversationOutput,
+  WeChatTextOutput,
+  WxSendMessageInput
 } from '@cloudbase/aiagent-framework'
 import fs from 'fs'
 
@@ -31,8 +33,14 @@ import { ChatHistoryService } from './chat_history.service'
 import { MainChatService } from './chat_main.service'
 import { RecommendQuestionsService } from './chat_recommend_questions.service'
 import { ChatToolService } from './chat_tool.service'
-import { DEFAULT_CONVERSATION_TITLE } from './constant'
-import { ConversationRelationEntity, ConversationRelationService } from './conversation_relation.service'
+import { WxChatService } from './chat_wx.service'
+import {
+  DEFAULT_CONVERSATION_TITLE
+} from './constant'
+import {
+  ConversationRelationEntity,
+  ConversationRelationService
+} from './conversation_relation.service'
 import { getEnvId, replaceEnvId, replaceReadMe, TcbContext } from './tcb'
 import { randomId } from './utils'
 
@@ -42,6 +50,7 @@ export class MyBot extends BotCore implements IBot {
   chatHistoryService: ChatHistoryService
   chatToolService: ChatToolService
   conversationRelationService: ConversationRelationService
+  wxAgentService: WxChatService
 
   constructor (context: TcbContext, botConfig: IBotConfig) {
     super(context)
@@ -56,7 +65,10 @@ export class MyBot extends BotCore implements IBot {
     this.chatHistoryService = new ChatHistoryService(botContext)
     this.recommendQuestionsService = new RecommendQuestionsService(botContext)
     this.chatToolService = new ChatToolService(botContext)
-    this.conversationRelationService = new ConversationRelationService(botContext)
+    this.conversationRelationService = new ConversationRelationService(
+      botContext
+    )
+    this.wxAgentService = new WxChatService(botContext)
   }
 
   async sendMessage (input: SendMessageInput): Promise<void> {
@@ -78,6 +90,26 @@ export class MyBot extends BotCore implements IBot {
     this.sseSender.end()
   }
 
+  async wxSendMessage (input: WxSendMessageInput): Promise<WeChatTextOutput> {
+    console.log('botId:', this.botId)
+    console.log('input:', input)
+
+    const syncChatResponse = await this.wxAgentService.chat({
+      botId: this.botId,
+      triggerSrc: input.triggerSrc,
+      wxVerify: input.wxVerify,
+      callbackData: input.callbackData
+    })
+
+    return {
+      ToUserName: syncChatResponse?.toUserName,
+      FromUserName: syncChatResponse?.fromUserName,
+      CreateTime: syncChatResponse?.createTime,
+      MsgType: syncChatResponse?.msgType,
+      Content: syncChatResponse?.content
+    }
+  }
+
   async getRecommendQuestions ({
     msg,
     history
@@ -96,8 +128,7 @@ export class MyBot extends BotCore implements IBot {
     const { sort, pageSize, pageNumber, conversationId } = input
 
     const userId =
-        this.context?.extendedContext?.userId ||
-        getEnvId(this.context)
+      this.context?.extendedContext?.userId || getEnvId(this.context)
 
     const conversation = conversationId || userId
     const [history, total] = await this.chatHistoryService.describeChatHistory({
@@ -171,14 +202,13 @@ export class MyBot extends BotCore implements IBot {
 
   async createConversation (): Promise<CreateConversationOutput> {
     const userId =
-        this.context?.extendedContext?.userId ||
-        getEnvId(this.context)
+      this.context?.extendedContext?.userId || getEnvId(this.context)
     // 统一的回复消息体
     const conversationInfo: ConversationRelationEntity = {
-      botId:this.botId,
+      botId: this.botId,
       userId: userId,
-      conversationId:`conversation-${randomId(8)}`,
-      title:DEFAULT_CONVERSATION_TITLE
+      conversationId: `conversation-${randomId(8)}`,
+      title: DEFAULT_CONVERSATION_TITLE
     }
 
     // 添加到数据库
@@ -195,17 +225,17 @@ export class MyBot extends BotCore implements IBot {
   async getConversation (
     input: GetConversationInput
   ): Promise<GetConversationOutput> {
-
     if (input.isDefault && input.isDefault === true) {
       return {
         data: [],
-        total:0
+        total: 0
       }
     }
     const pageSize: number = input.limit || 10
     const pageNumber = Math.floor(input.offset || 0 / pageSize) + 1
 
-    const userId = this.context?.extendedContext?.userId || getEnvId(this.context)
+    const userId =
+      this.context?.extendedContext?.userId || getEnvId(this.context)
     const [conversationRelationList, total] =
       await this.conversationRelationService.describeConversationRelation({
         botId: this.botId,
@@ -236,15 +266,15 @@ export class MyBot extends BotCore implements IBot {
   async updateConversation (
     input: UpdateConversationInput
   ): Promise<UpdateConversationOutput> {
-
     if (!input.title || input.title.length === 0) {
       throw new Error('title 不能为空')
     }
-    const  { count } = await this.conversationRelationService.updateConversationRelationTitle({
-      botId: this.botId,
-      conversationId: input.conversationId,
-      title: input.title
-    })
+    const { count } =
+      await this.conversationRelationService.updateConversationRelationTitle({
+        botId: this.botId,
+        conversationId: input.conversationId,
+        title: input.title
+      })
 
     return { count }
   }
@@ -252,12 +282,11 @@ export class MyBot extends BotCore implements IBot {
   async deleteConversation (
     input: DeleteConversationInput
   ): Promise<DeleteConversationOutput> {
-    const { count } = await this.conversationRelationService.deleteConversationRelationByID(
-      {
+    const { count } =
+      await this.conversationRelationService.deleteConversationRelationByID({
         botId: this.botId,
         conversationId: input.conversationId
-      }
-    )
+      })
     return { count }
   }
 }

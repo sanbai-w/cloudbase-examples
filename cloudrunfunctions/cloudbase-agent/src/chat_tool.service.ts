@@ -29,7 +29,8 @@ export class ChatToolService {
 
   async handleSearchNetwork ({
     msg,
-    searchEnable
+    searchEnable,
+    needSSE
   }): Promise<ToolCallResult<aitools.SearchNetworkResult>> {
     if (!searchEnable) {
       return null
@@ -42,7 +43,6 @@ export class ChatToolService {
 
     if (result?.code && result?.code?.length !== 0) {
       throw new Error(`查询联网内容失败 ${result?.message}`)
-
     }
 
     if (result) {
@@ -58,7 +58,9 @@ export class ChatToolService {
         finish_reason: 'continue'
       }
 
-      this.botContext.bot.sseSender.send(`data: ${JSON.stringify(data)}\n\n`)
+      if (needSSE){
+        this.botContext.bot.sseSender.send(`data: ${JSON.stringify(data)}\n\n`)
+      }
 
       if (result.content) {
         const netKnowledgeList = [
@@ -82,12 +84,12 @@ export class ChatToolService {
         }
       }
     }
-
   }
 
   async handleSearchFile ({
     msg,
-    files
+    files,
+    needSSE
   }): Promise<ToolCallResult<aitools.SearchFileResult>> {
     if (files?.length === 0 || !this.botContext.info.searchFileEnable) {
       return null
@@ -112,7 +114,9 @@ export class ChatToolService {
         content: result.content ?? '',
         finish_reason: 'continue'
       }
-      this.botContext.bot.sseSender.send(`data: ${JSON.stringify(data)}\n\n`)
+      if (needSSE) {
+        this.botContext.bot.sseSender.send(`data: ${JSON.stringify(data)}\n\n`)
+      }
 
       const fileList = [{ question: msg, answer: result.content ?? '' }]
       const searchFileText = fileList
@@ -136,7 +140,8 @@ export class ChatToolService {
   }
 
   async handleSearchDB ({
-    msg
+    msg,
+    needSSE
   }): Promise<ToolCallResult<aitools.SearchDBResult>> {
     if (this.botContext.info.databaseModel.length === 0) {
       return null
@@ -162,7 +167,9 @@ export class ChatToolService {
           relateTables: result.searchResult?.relateTables?.length ?? 0
         }
       }
-      this.botContext.bot.sseSender.send(`data: ${JSON.stringify(data)}\n\n`)
+      if (needSSE) {
+        this.botContext.bot.sseSender.send(`data: ${JSON.stringify(data)}\n\n`)
+      }
 
       const prompt = `
 <db_search desc="数据库查询">
@@ -179,7 +186,8 @@ export class ChatToolService {
   }
 
   async handleSearchKnowledgeBase ({
-    msg
+    msg,
+    needSSE
   }): Promise<ToolCallResult<aitools.SearchKnowledgeResult>> {
     if (this.botContext?.info?.knowledgeBase?.length === 0) {
       return null
@@ -217,9 +225,11 @@ export class ChatToolService {
           knowledge_base: Array.from(documentSetNameList),
           knowledge_meta: Array.from(fileMetaDataList)
         }
-        this.botContext?.bot?.sseSender?.send(
-          `data: ${JSON.stringify(result)}\n\n`
-        )
+        if (needSSE){
+          this.botContext?.bot?.sseSender?.send(
+            `data: ${JSON.stringify(result)}\n\n`
+          )
+        }
       }
 
       const highScoreDocuments = result?.documents?.filter(
@@ -279,7 +289,6 @@ export class ChatToolService {
   async textToSpeech (
     input: TextToSpeechInput
   ): Promise<aitools.TextToSpeechResult> {
-
     const result = await this.botContext.bot.tools.textToSpeech(
       this.botContext.info.botId,
       input.text,

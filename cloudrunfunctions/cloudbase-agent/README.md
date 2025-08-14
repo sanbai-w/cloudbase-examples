@@ -25,6 +25,7 @@ $ tree -L 3
 │   ├── chat_main.service.ts
 │   ├── chat_recommend_questions.service.ts
 │   ├── chat_tool.service.ts
+│   ├── chat_wx.service.ts
 │   ├── config.ts
 │   ├── constant.ts
 │   ├── conversation_relation.service.ts
@@ -32,7 +33,8 @@ $ tree -L 3
 │   ├── llm.ts
 │   ├── mcp.ts
 │   ├── tcb.ts
-│   └── utils.ts
+│   ├── utils.ts
+│   └── wx_api.service.ts
 └── tsconfig.json
 
 2 directories, 25 files

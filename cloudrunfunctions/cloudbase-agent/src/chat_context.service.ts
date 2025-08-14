@@ -113,10 +113,11 @@ ${botInfo?.introduction}
     return botInfoText
   }
 
-  private async callTools ({ msg, searchEnable, files }) {
+  private async callTools ({ msg, searchEnable, files, needSSE = true }) {
     if (this.botContext?.info?.databaseModel?.length > 0) {
       const handleSearchDBResult = await this.chatToolService.handleSearchDB({
-        msg
+        msg,
+        needSSE
       })
       if (handleSearchDBResult?.prompt) {
         const prompts: string[] = []
@@ -149,9 +150,13 @@ ${handleSearchDBResult.prompt}
         handleSearchNetworkResult,
         handleSearchFileResult
       ] = await Promise.all([
-        this.chatToolService.handleSearchKnowledgeBase({ msg }),
-        this.chatToolService.handleSearchNetwork({ msg, searchEnable }),
-        this.chatToolService.handleSearchFile({ msg, files })
+        this.chatToolService.handleSearchKnowledgeBase({ msg, needSSE }),
+        this.chatToolService.handleSearchNetwork({
+          msg,
+          searchEnable,
+          needSSE
+        }),
+        this.chatToolService.handleSearchFile({ msg, files, needSSE })
       ])
 
       const prompts: string[] = []
@@ -180,7 +185,8 @@ ${handleSearchDBResult.prompt}
     history = [],
     files = [],
     searchEnable = false,
-    triggerSrc = ''
+    triggerSrc = '',
+    needSSE = false
   }) {
     // try {
     // 整理历史信息，确保顺序正常
@@ -203,13 +209,15 @@ ${handleSearchDBResult.prompt}
     const messages = []
     if (
       !this.botContext.info?.type ||
-        this.botContext.info.type === BOT_TYPE_TEXT
+      this.botContext.info.type === BOT_TYPE_TEXT
     ) {
       if (fixHistoryList?.length > 0) {
         messages.push(...fixHistoryList)
       }
 
-      messages.push(...(await this.callTools({ msg, searchEnable, files })))
+      messages.push(
+        ...(await this.callTools({ msg, searchEnable, files, needSSE }))
+      )
       messages.push({ role: 'assistant', content: '好的' })
 
       // 添加当前问题

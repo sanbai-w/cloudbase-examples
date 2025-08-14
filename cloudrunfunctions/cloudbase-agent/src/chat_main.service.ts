@@ -123,7 +123,8 @@ export class MainChatService {
       history: options.history,
       searchEnable:
         options.searchEnable && this.botContext.info.searchNetworkEnable,
-      triggerSrc: TRIGGER_SRC_TCB
+      triggerSrc: TRIGGER_SRC_TCB,
+      needSSE: true
     })
     const { replyRecordId } = await this.beforeStream({
       msg: options.msg,

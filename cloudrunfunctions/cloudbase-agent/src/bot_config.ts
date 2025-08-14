@@ -4,6 +4,11 @@ import * as path from 'path'
 
 import { McpServer } from './mcp'
 
+export interface WxAccessInfo {
+  triggerSrc: string
+  appId?: string
+  appSecret?: string
+}
 export interface IBotConfig {
   name: string;
   model: string;
