@@ -51,7 +51,6 @@
   },
   "compileType": "miniprogram",
   "libVersion": "latest",
-  "appid": "wx3bd76058b11e2e6f",
   "projectname": "云开发空白项目",
   "isGameTourist": false,
   "condition": {
