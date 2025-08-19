@@ -18,4 +18,15 @@ export default defineConfig({
 			},
 		},
 	},
+	base: './',
+
+	server: {
+		proxy: {
+			'/__auth': {
+				target: 'https://envId-appid.tcloudbaseapp.com/',
+				changeOrigin: true,
+			}
+		},
+		allowedHosts: true
+	}
 });

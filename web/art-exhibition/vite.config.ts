@@ -7,6 +7,13 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      '/__auth': {
+        target: 'https://envId-appid.tcloudbaseapp.com/',
+        changeOrigin: true,
+      }
+    },
+    allowedHosts: true
   },
   plugins: [react()].filter(Boolean),
   resolve: {
@@ -14,6 +21,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  base: './',
   define: {
     "process.env.isApp": false,
   },

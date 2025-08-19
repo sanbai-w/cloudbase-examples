@@ -13,6 +13,7 @@ export default defineConfig({
         target: 'https://tcb-advanced-a656fc-1257967285.tcloudbaseapp.com/',
         changeOrigin: true,
       }
-    }
+    },
+    allowedHosts: true
   }
 })

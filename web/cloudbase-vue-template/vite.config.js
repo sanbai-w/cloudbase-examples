@@ -12,6 +12,7 @@ export default defineConfig({
         target: 'https://envId-appid.tcloudbaseapp.com/',
         changeOrigin: true,
       }
-    }
+    },
+    allowedHosts: true
   }
 }) 
