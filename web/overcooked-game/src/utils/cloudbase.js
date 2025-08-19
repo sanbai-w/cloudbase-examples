@@ -1,7 +1,7 @@
 import cloudbase from '@cloudbase/js-sdk';
 
 // 云开发环境ID
-const ENV_ID = 'luke-agent-dev-7g1nc8tqc2ab76af';
+const ENV_ID = import.meta.env.VITE_ENV_ID || 'your-env-id';
 
 // 检查环境ID是否已配置
 const isValidEnvId = ENV_ID && ENV_ID !== 'your-env-id';
