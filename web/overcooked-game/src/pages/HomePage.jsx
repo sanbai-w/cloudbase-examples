@@ -171,7 +171,7 @@ const HomePage = () => {
         className="mt-16 p-4 bg-base-200 rounded-lg text-center"
       >
         <p className="opacity-60 text-sm">
-          当前环境 ID: {import.meta.env.VITE_APP_ENV_ID || '未设置'} | 
+          当前环境 ID: {import.meta.env.VITE_ENV_ID || '未设置'} | 
           <a 
             href="https://console.cloud.tencent.com/tcb" 
             target="_blank"

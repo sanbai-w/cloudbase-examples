@@ -1,7 +1,7 @@
 import cloudbase from '@cloudbase/js-sdk';
 
 // 云开发环境ID，使用时请替换为您的环境ID
-const ENV_ID = 'your-env-id';
+const ENV_ID = import.meta.env.VITE_ENV_ID || 'your-env-id';
 
 // 检查环境ID是否已配置
 const isValidEnvId = ENV_ID && ENV_ID !== 'your-env-id';
