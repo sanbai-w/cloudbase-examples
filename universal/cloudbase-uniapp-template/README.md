@@ -22,15 +22,15 @@
  
  H5 端 | 微信小程序 |
 |:---:|:---:|
-| ![H5 端](https://636c-cloudbase-test-v1-8e8tzqa7290d87-1259218801.tcb.qcloud.la/UniApp%E6%A8%A1%E7%89%88%E9%A2%84%E8%A7%88%E5%9B%BE%E7%89%87/H5.png) | ![微信小程序](https://636c-cloudbase-test-v1-8e8tzqa7290d87-1259218801.tcb.qcloud.la/UniApp%E6%A8%A1%E7%89%88%E9%A2%84%E8%A7%88%E5%9B%BE%E7%89%87/mp-weixin.png) |
+| ![H5 端](https://qcloudimg.tencent-cloud.cn/raw/cec528e3e0d4dddadff11c66a11013cc.png) | ![微信小程序](https://qcloudimg.tencent-cloud.cn/raw/826666e480af55c2c886ffa1a451dea8.png) |
 
  支付宝小程序 | 抖音小程序 |
 |:---:|:---:|
-| ![支付宝小程序](https://636c-cloudbase-test-v1-8e8tzqa7290d87-1259218801.tcb.qcloud.la/UniApp%E6%A8%A1%E7%89%88%E9%A2%84%E8%A7%88%E5%9B%BE%E7%89%87/mp-alipay.png) | ![抖音小程序](https://636c-cloudbase-test-v1-8e8tzqa7290d87-1259218801.tcb.qcloud.la/UniApp%E6%A8%A1%E7%89%88%E9%A2%84%E8%A7%88%E5%9B%BE%E7%89%87/mp-toutiao.png) |
+| ![支付宝小程序](https://qcloudimg.tencent-cloud.cn/raw/5fa5a46ae73b325bb1199b7e4059e480.png) | ![抖音小程序](https://qcloudimg.tencent-cloud.cn/raw/c4750c695aa81dab6cd3ef2de0aee8f0.png) |
 
  Android 和 iOS |
 |:---:|
-| <img src="https://636c-cloudbase-test-v1-8e8tzqa7290d87-1259218801.tcb.qcloud.la/UniApp%E6%A8%A1%E7%89%88%E9%A2%84%E8%A7%88%E5%9B%BE%E7%89%87/iOS-%20android.jpg" width="50%"/> |
+| <img src="https://qcloudimg.tencent-cloud.cn/raw/34cb2e31c0a667caf8396a2b12c87c94.jpg" width="50%"/> |
 
 
 
