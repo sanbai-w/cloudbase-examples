@@ -88,13 +88,13 @@
 <script setup>
 import Footer from '../components/Footer.vue'
 import { ref, onMounted } from 'vue'
-import { ensureLogin, checkEnvironment, isValidEnvId } from '../utils/cloudbase.js'
+import { ensureLogin, checkEnvironment, isValidEnvId, ENV_ID } from '../utils/cloudbase.js'
 
 // 响应式数据
 const isLoading = ref(false)
 const cloudbaseStatus = ref({
   connected: false,
-  envId: isValidEnvId ? 'your-env-id' : null
+  envId: isValidEnvId ? ENV_ID : null
 })
 const loginState = ref({
   isLoggedIn: false,
