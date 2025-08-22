@@ -59,6 +59,17 @@ npm install
 npm run dev
 ```
 
+### VS Code 预览功能
+
+本项目已配置 VS Code 预览功能，支持自动打开浏览器预览：
+
+1. 在 VS Code 中打开项目
+2. 项目会自动加载 `.vscode/preview.yml` 配置
+3. 启动开发服务器后会自动打开浏览器预览页面
+4. 默认端口：5173
+
+配置文件位置：`.vscode/preview.yml`
+
 ### 构建生产版本
 
 ```bash
