@@ -8,3 +8,5 @@ apps:
     description: CloudBase UniApp 跨平台应用模板 # 应用描述
     autoOpen: true # 打开工作空间时是否自动开启预览（优先级高于根级 autoOpen）
     autoPreview: true # 是否自动打开预览, 若无则默认为true
+
+

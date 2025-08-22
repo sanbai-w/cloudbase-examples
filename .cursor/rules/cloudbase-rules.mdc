@@ -1,5 +1,3 @@
-
-cloudbaseAIVersion：1.8.32
 ---
 description: CloudBase AI 开发规则指南 - 提供场景化的最佳实践，确保开发质量
 globs: *
@@ -111,12 +109,19 @@ alwaysApply: true
 
 1. **下载云开发 AI 规则或者其他模板**：推荐从模板开始新的项目，可以使用downloadTemplate 来下载，如果无法下载到当前目录，可以使用脚本来进行复制，注意隐藏文件也需要复制
 
-2. **小程序 TabBar等素材下载下载远程素材链接**：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，必须使用 downloadRemoteFile 工具下载文件到本地
+2. **小程序 TabBar等素材下载下载远程素材链接**：小程序的 Tabbar 等素材图片，必须使用 **png** 格式，必须使用 downloadRemoteFile 工具下载文件到本地,可以从 Unsplash、wikimedia【一般选用 500 大小即可、Pexels、Apple 官方 UI 等资源中选择
 
 如果应用中需要远程链接，可以继续调用 uploadFile 上传后获得临时访问链接和云存储的 cloudId
 
 3. **从知识库查询专业知识**： 如果对于云开发某块知识不确定，可以使用 searchKnowledgeBase 工具智能检索云开发知识库（支持云开发与云函数、小程序前端知识等），通过向量搜索快速获取专业文档与答案
 
+4. **微信开发者工具打开项目流程**：
+- 当检测到当前项目为小程序项目时，建议用户使用微信开发者工具进行预览调试和发布
+- 在打开前确认 project.config.json 中配置了 appid 字段，如果没有配置，必须向用户询问获取
+- 使用微信开发者内置的 CLI 命令打开项目（指向 project.config.json 所在目录）：
+  - Windows: `"C:\Program Files (x86)\Tencent\微信web开发者工具\cli.bat" open --project "项目根目录路径"`
+  - macOS: `/Applications/wechatwebdevtools.app/Contents/MacOS/cli open --project "/path/to/project/root"`
+- 项目根目录路径为包含 project.config.json 文件的目录
 
 ### 部署流程
 1. **部署云函数流程**：可以通过 getFunctionList MCP 工具来查询是否有云函数，然后直接调用 createFunction 或者 updateFunctionCode 更新云函数代码，只需要将functionRootPath 指向云函数目录的父目录(例如 cloudfuncitons 这个目录的绝对路径),不需要压缩代码等操作，上述工具会自动读取云函数父目录下的云函数同名目录的文件，并自动进行部署
@@ -139,6 +144,14 @@ alwaysApply: true
 例如，很多接口都需要传confirm参数，这个参数是boolean类型，如果你不提供这个参数，或者提供错误的数据类型错误，那么接口会返回错误。
 
 ## 🔍 专业规则文件详细说明
+
+## 使用指导
+- **Web 项目开发**：主要参考 `rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
+- **微信小程序开发**：主要参考 `rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`  
+- **数据库相关**：额外参考 `rules/database.mdc`, MySQL 数据库参考 `rules/data-model-creation.mdc`
+- **UI 设计需求**：额外参考 `rules/ui-design.mdc`
+- **数据模型建模**：额外参考 `rules/data-model-creation.mdc`
+
 
 ### 📱 rules/miniprogram-development.mdc  
 **强制适用**：微信小程序项目
@@ -163,7 +176,17 @@ alwaysApply: true
 
 
 
-<<<<<<< HEAD
+### 🗄️ rules/database.mdc
+**条件必读**：涉及数据库操作时
+- CloudBase 数据库操作规范
+- 权限管理和安全策略
+- 错误处理和数据更新
+
+### 🎨 rules/ui-design.mdc
+**条件必读**：需要界面设计时  
+- 高保真原型设计
+- UI/UX 规范和样式处理
+
 ### rules/data-model-creation.mdc
 描述数据模型AI建模和创建的专业规则，包含：
 - Mermaid ER图建模规范和语法
@@ -172,24 +195,7 @@ alwaysApply: true
 - 数据模型创建工具使用规范
 - 适用于需要AI驱动数据建模的项目
 
-## 使用指导
-- **Web 项目开发**：主要参考 `rules/web-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`
-- **微信小程序开发**：主要参考 `rules/miniprogram-development.mdc` + `rules/cloudbase-platform.mdc` + `rules/workflows.mdc`  
-- **数据库相关**：额外参考 `rules/database.mdc`
-- **UI 设计需求**：额外参考 `rules/ui-design.mdc`
-- **数据模型建模**：额外参考 `rules/data-model-creation.mdc`
-=======
-### 🗄️ rules/database.mdc
-**条件必读**：涉及数据库操作时
-- CloudBase 数据库操作规范
-- 权限管理和安全策略
-- 错误处理和数据更新
->>>>>>> main
 
-### 🎨 rules/ui-design.mdc
-**条件必读**：需要界面设计时  
-- 高保真原型设计
-- UI/UX 规范和样式处理
 
 ## ⚡ 开发质量检查清单
 
