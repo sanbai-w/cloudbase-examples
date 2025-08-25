@@ -57,8 +57,8 @@ MYSQL_USERNAME=your_username
 MYSQL_PASSWORD=your_password
 MYSQL_ADDRESS=localhost:port
 MYSQL_DATABASE=your_database
-# 本地调试时, 绑定 80 端口可能失败, 可以用 PORT 环境变量指定其他端口
-PORT=5000
+# 可以用 PORT 环境变量指定其他端口
+PORT=8080
 ```
 
 ### 3. 启动本地开发服务器
@@ -70,11 +70,11 @@ PORT=5000
 python app.py
 ```
 
-应用将在 `http://localhost:5000` 启动。
+应用将在 `http://localhost:8080` 启动。
 
 ### 4. 测试应用功能
 
-- 访问 `http://localhost:5000` 查看前端页面
+- 访问 `http://localhost:8080` 查看前端页面
 - 使用页面上的按钮测试计数器功能：
   - 点击 "增加" 按钮增加计数
   - 点击 "清空" 按钮重置计数
@@ -82,15 +82,15 @@ python app.py
 
   ```bash
   # 获取当前计数
-  curl http://localhost:5000/api/count
+  curl http://localhost:8080/api/count
 
   # 增加计数
-  curl -X POST http://localhost:5000/api/count \
+  curl -X POST http://localhost:8080/api/count \
     -H "Content-Type: application/json" \
     -d '{"action": "inc"}'
 
   # 清空计数
-  curl -X POST http://localhost:5000/api/count \
+  curl -X POST http://localhost:8080/api/count \
     -H "Content-Type: application/json" \
     -d '{"action": "clear"}'
   ```
@@ -109,7 +109,7 @@ python app.py
 docker build -t python-mysql-demo .
 
 # 运行容器（需要先启动 MySQL 容器）
-docker run --rm -p 5000:80 python-mysql-demo
+docker run --rm -p 8080:8080 python-mysql-demo
 ```
 
 ## Dockerfile 最佳实践

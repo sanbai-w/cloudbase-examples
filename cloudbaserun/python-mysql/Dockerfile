@@ -21,5 +21,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 拷贝代码
 COPY . /app
 
-# 启动命令，默认监听 PORT 环境变量（默认为 80）
-CMD ["sh", "-c", "exec gunicorn -b 0.0.0.0:${PORT:-80} app:app --access-logfile - --error-logfile -"]
+# 启动命令，默认监听 PORT 环境变量（默认为 8080）
+CMD ["sh", "-c", "exec gunicorn -b 0.0.0.0:${PORT:-8080} app:app --access-logfile - --error-logfile -"]

@@ -24,6 +24,6 @@ COPY web ./web
 COPY --from=builder /out/server ./server
 
 # Port set by env PORT (default 80)
-ENV PORT=80
+ENV PORT=8080
 
 CMD ["/app/server"] 

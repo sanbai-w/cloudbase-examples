@@ -24,7 +24,7 @@ func Load() (*Config, error) {
 	}
 
 	cfg := &Config{
-		Port:          getEnv("PORT", "80"),
+		Port:          getEnv("PORT", "8080"),
 		MySQLUsername: os.Getenv("MYSQL_USERNAME"),
 		MySQLPassword: os.Getenv("MYSQL_PASSWORD"),
 		MySQLAddress:  getEnv("MYSQL_ADDRESS", ""),
