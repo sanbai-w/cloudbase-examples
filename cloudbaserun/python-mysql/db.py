@@ -1,11 +1,12 @@
 import os
 from typing import Tuple
 from dotenv import load_dotenv
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
 
-from sqlalchemy import Column, Integer, create_engine, text
+from sqlalchemy import Column, Integer, create_engine, text, DateTime
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -54,6 +55,8 @@ def create_counter_model(table_name: str):
 
         id = Column(Integer, primary_key=True, autoincrement=True)
         count = Column(Integer, nullable=False, default=1)
+        createdAt = Column(DateTime, nullable=False, default=datetime.now)
+        updatedAt = Column(DateTime, nullable=False, default=datetime.now)
 
     Counter.__name__ = f"{table_name}Model"
     return Counter

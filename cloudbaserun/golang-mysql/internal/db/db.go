@@ -16,8 +16,10 @@ type Database struct {
 }
 
 type Counter struct {
-	ID    uint `gorm:"primaryKey"`
-	Count int  `gorm:"not null;default:1"`
+	ID        uint      `gorm:"primaryKey"`
+	Count     int       `gorm:"not null;default:1"`
+	CreatedAt time.Time `gorm:"column:createdAt;not null"`
+	UpdatedAt time.Time `gorm:"column:updatedAt;not null"`
 }
 
 func (Counter) TableName() string {
