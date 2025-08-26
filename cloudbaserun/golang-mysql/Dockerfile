@@ -23,7 +23,10 @@ WORKDIR /app
 COPY web ./web
 COPY --from=builder /out/server ./server
 
+# Copy environment file
+COPY .env ./.env
+
 # Port set by env PORT (default 80)
 ENV PORT=8080
 
-CMD ["/app/server"] 
+CMD ["/app/server"]
